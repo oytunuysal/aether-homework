@@ -30,26 +30,52 @@ export function createWalls(groundPoints, roofPoints) {
     return wallGroup;
 }
 
+// export function xcreateRoof(roofPoints) {
+//     const shape = new THREE.Shape(roofPoints.map(v => new THREE.Vector2(v.x, v.z)));
+//     const geom = new THREE.ShapeGeometry(shape);
+//     let roofMesh = new THREE.Mesh(
+//         geom,
+//         new THREE.MeshStandardMaterial({ color: "#b05f4e", side: THREE.DoubleSide }),
+//     );
+//     return roofMesh
+// }
+
 export function createRoof(roofPoints) {
-    const shape = new THREE.Shape(roofPoints.map(v => new THREE.Vector2(v.x, v.z)));
-    const geom = new THREE.ShapeGeometry(shape);
-    let roofMesh = new THREE.Mesh(
-        geom,
-        new THREE.MeshStandardMaterial({ color: "#b05f4e", side: THREE.DoubleSide }),
-    );
-    roofMesh.rotateX(Math.PI / 2)
-    return roofMesh
+    const geometry = new THREE.BufferGeometry();
+
+    const vertices = [];
+    roofPoints.forEach(point => {
+        vertices.push(point.x, point.y, point.z);
+    });
+
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+    geometry.computeVertexNormals();
+
+    const indices = [];
+    for (let i = 1; i < roofPoints.length - 1; i++) {
+        indices.push(0, i, i + 1);
+    }
+    geometry.setIndex(indices);
+
+    // Create material and mesh
+    const material = new THREE.MeshBasicMaterial({
+        color: 0x00ff00,
+        side: THREE.DoubleSide
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    return mesh
 }
 
-export function xapplyRoofTransform(roofPoints, pitch, azimuth) {
-    const group = new THREE.Group();
-    roofPoints.forEach(p => group.add(new THREE.Object3D().position.copy(p)));
+// export function xapplyRoofTransform(roofPoints, pitch, azimuth) {
+//     const group = new THREE.Group();
+//     roofPoints.forEach(p => group.add(new THREE.Object3D().position.copy(p)));
 
-    group.rotation.x = THREE.MathUtils.degToRad(pitch);
-    group.rotation.y = THREE.MathUtils.degToRad(azimuth);
+//     group.rotation.x = THREE.MathUtils.degToRad(pitch);
+//     group.rotation.y = THREE.MathUtils.degToRad(azimuth);
 
-    return group.children.map(child => child.position.clone());
-}
+//     return group.children.map(child => child.position.clone());
+// }
 
 export function applyRoofTransform(roofPoints, pitch, azimuth) {
     if (!roofPoints?.length) return [];

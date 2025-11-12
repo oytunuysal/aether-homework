@@ -20,7 +20,8 @@ export default function BuildingMesh({ points, height, pitch, azimuth }) {
 
         const wallsMeshGroup = createWalls(groundPoints, roofPoints);
         const roofMesh = createRoof(roofPoints);
-        roofMesh.position.setY(height)
+        // roofMesh.position.setY(height)
+        // roofMesh.rotateX(Math.PI / 2)
 
         const roofGroup = new THREE.Group();
         roofGroup.add(roofMesh);
