@@ -59,8 +59,8 @@ export function createRoof(roofPoints) {
     geometry.setIndex(indices);
 
     // Create material and mesh
-    const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
+    const material = new THREE.MeshStandardMaterial({
+        color: "#b05f4e",
         side: THREE.DoubleSide
     });
     const mesh = new THREE.Mesh(geometry, material);
