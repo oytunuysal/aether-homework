@@ -120,9 +120,9 @@ export function projectRoofPoints(groundPoints, height, pitch, azimuth) {
 function roofNormalFromPitchAzimuth(pitchDeg, azimuthDeg) {
     const θ = pitchDeg
     const φ = azimuthDeg
-    const nx = -Math.sin(θ) * Math.cos(φ);
+    const nx = Math.sin(θ) * Math.sin(φ);
     const ny = Math.cos(θ);
-    const nz = -Math.sin(θ) * Math.sin(φ);
+    const nz = -Math.sin(θ) * Math.cos(φ);
     return new THREE.Vector3(nx, ny, nz);
 }
 
