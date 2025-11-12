@@ -82,3 +82,31 @@ export function rebuildBuilding({ groundPoints, height, pitch, azimuth }) {
 
     return { roofPoints, walls, roof };
 }
+
+//new approach
+export function projectRoofPoints(groundPoints, height, pitch, azimuth) {
+    let normalVector = roofNormalFromPitchAzimuth(pitch, azimuth)
+    let planeFunction = planeFromNormalAndPoint(normalVector, new THREE.Vector3(0, height, 0))
+    //to find roof points
+    return groundPoints.map(p => new THREE.Vector3(p.x, yOnPlaneAtXZ(planeFunction, p.x, p.z), p.z));
+}
+
+function roofNormalFromPitchAzimuth(pitchDeg, azimuthDeg) {
+    const θ = pitchDeg
+    const φ = azimuthDeg
+    const nx = -Math.sin(θ) * Math.cos(φ);
+    const ny = Math.cos(θ);
+    const nz = -Math.sin(θ) * Math.sin(φ);
+    return new THREE.Vector3(nx, ny, nz);
+}
+
+function planeFromNormalAndPoint(normal, point) {
+    const { x: A, y: B, z: C } = normal;
+    const D = -(A * point.x + B * point.y + C * point.z);
+    return { A, B, C, D };
+}
+
+function yOnPlaneAtXZ(plane, x, z) {
+    const { A, B, C, D } = plane;
+    return (-D - A * x - C * z) / B;
+}

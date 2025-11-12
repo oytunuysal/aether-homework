@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import * as THREE from "three";
-import { createRoofPoints, createWalls, createRoof, applyRoofTransform } from "./helpers";
+import { createRoofPoints, createWalls, createRoof, applyRoofTransform, projectRoofPoints } from "./helpers";
 
 export default function BuildingMesh({ points, height, pitch, azimuth }) {
     console.log(points);
@@ -12,9 +12,11 @@ export default function BuildingMesh({ points, height, pitch, azimuth }) {
     const { roofGroup, walls, roof } = useMemo(() => {
         if (groundPoints.length < 3) return {};
 
-        let roofPoints = createRoofPoints(groundPoints, height);
+        // let roofPoints = createRoofPoints(groundPoints, height);
 
-        roofPoints = applyRoofTransform(roofPoints, pitch, azimuth);
+        // roofPoints = applyRoofTransform(roofPoints, pitch, azimuth);
+
+        let roofPoints = projectRoofPoints(groundPoints, height, pitch, azimuth)
 
         const wallsMeshGroup = createWalls(groundPoints, roofPoints);
         const roofMesh = createRoof(roofPoints);
